@@ -27,7 +27,7 @@ class LowercaseEmailField(models.EmailField):
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=255, unique=True)
-    email = LowercaseEmailField(_('email address'), unique=True)
+    email = LowercaseEmailField(_('email address'), unique=True)  # for iam users - username@xyz.com
     name = models.CharField(max_length=255)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -43,7 +43,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     type = models.CharField(_('Type'), max_length=255, choices=Types.choices, default=default_type)
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    #REQUIRED_FIELDS = ['email']
+    REQUIRED_FIELDS = []
 
     objects = UserManager()
 
@@ -62,7 +63,11 @@ class RootUserAdditional(models.Model):
 class IAMUserAdditional(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     root_user = models.ForeignKey(User, on_delete = models.CASCADE, related_name='root_user')
-    
+    key = models.CharField(max_length=255, unique=True)
+    iam_user_email = models.EmailField()
+
+    class Meta:
+        unique_together = (('root_user', 'iam_user_email'),)
 
 # Model Managers for proxy models
 class RootUserManager(models.Manager):

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import User
+from ..models import User, IAMUserAdditional, RootUserAdditional
 from django.contrib.auth import authenticate, login
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import exceptions
@@ -56,6 +56,7 @@ class RootUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
+        # depth = 1
         #extra_fields = ['showAdditional']
 
 #class RootUserAdditionalSerializer(serializers.ModelSerializer):
@@ -72,15 +73,31 @@ class RootUserRegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data, username = username)
         return user
 
+class IAMUserAdditionalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IAMUserAdditional
+        fields = '__all__'
+
 class IAMUserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
-        extra_kwargs = {'id': {'read_only': True}}
+        extra_kwargs = {'id': {'read_only': True}, 'username': {'read_only': True}}
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
+        username = uuid.uuid4().hex[:30]
+        validated_data['email'] = username + "@xyz.com"
+        user = User.objects.create_user(**validated_data, username = username)
         return user
+
+class IAMUserSerializer(serializers.ModelSerializer):
+    #root_user = serializers.Integer(source='geofence.id', read_only=True)
+    iamuseradditional = IAMUserAdditionalSerializer()   # one to one display of child from parent serializer
+    class Meta:
+        model = User
+        #fields = '__all__'
+        #extra_kwargs = {'id': {'read_only': True}, 'username': {'read_only': True}}
+        exclude = ('username', 'email', 'password')
 
 
 # {
