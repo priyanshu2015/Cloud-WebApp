@@ -76,16 +76,16 @@ class RootUserRegisterSerializer(serializers.ModelSerializer):
 class IAMUserAdditionalSerializer(serializers.ModelSerializer):
     class Meta:
         model = IAMUserAdditional
-        fields = '__all__'
+        exclude = ('key',)
 
 class IAMUserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
-        extra_kwargs = {'id': {'read_only': True}, 'username': {'read_only': True}}
+        extra_kwargs = {'id': {'read_only': True}, 'username': {'read_only': True}}#, 'password': {'read_only': True}}
 
     def create(self, validated_data):
-        username = uuid.uuid4().hex[:30]
+        username = uuid.uuid4().hex#[:30]
         validated_data['email'] = username + "@xyz.com"
         user = User.objects.create_user(**validated_data, username = username)
         return user
