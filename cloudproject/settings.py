@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 import environ
 env = environ.Env(
     # set casting, default value,  if DEBUG=True/On in .env then True otherwise False

@@ -43,8 +43,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     type = models.CharField(_('Type'), max_length=255, choices=Types.choices, default=default_type)
 
     USERNAME_FIELD = 'username'
-    #REQUIRED_FIELDS = ['email']
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['email']
+    # REQUIRED_FIELDS = []
 
     objects = UserManager()
 
