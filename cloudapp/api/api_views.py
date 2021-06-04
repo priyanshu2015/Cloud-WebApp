@@ -1,4 +1,4 @@
-from .serializers import RootUserAuthCustomTokenSerializer, RootUserSerializer, RootUserRegisterSerializer, IAMUserRegisterSerializer, IAMUserSerializer
+from .serializers import RootUserAuthCustomTokenSerializer, RootUserSerializer, RootUserRegisterSerializer, IAMUserRegisterSerializer, IAMUserSerializer, PermissionSerializer
 from rest_framework.views import APIView
 from ..models import User, IAMUserAdditional, RootUserAdditional, IAMUser, RootUser
 from rest_framework.authtoken.models import Token
@@ -158,4 +158,16 @@ class AESCipher(object):
     def __unpad(plain_text):
         last_character = plain_text[len(plain_text) - 1:]
         return plain_text[:-ord(last_character)]
+
+
+class ListPermissions(generics.ListAPIView):
+    serializer_class = PermissionSerializer
+    authentication_classes=[TokenAuthentication]
+    permission_classes =(IsAuthenticated,)
+    
+    # def get(self, request):
+    #     return Response(data=self.request.user.get_all_permissions())
+
+    def get_queryset(self):
+        return self.request.user.user_permissions
 

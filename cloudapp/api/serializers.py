@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import exceptions
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.models import Permission
 import uuid
 
 def validateEmail( email ):
@@ -111,3 +112,9 @@ class IAMUserSerializer(serializers.ModelSerializer):
 #     "email_or_username": "priyanshu@gmail.com",
 #     "password": "1234"
 # }
+
+
+class PermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Permission
+        fields = '__all__'
