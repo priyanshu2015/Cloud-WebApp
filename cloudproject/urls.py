@@ -13,13 +13,27 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken import views as drf_views
 urlpatterns = [
+    path('jet', include('jet.urls', 'jet')),
+    path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     path('admin/', admin.site.urls),
     path('', include('cloudapp.urls')),
     path('vm/', include('virtualmachine.urls')),
     path('api-auth/', include('rest_framework.urls')),
-    #path('api-token-auth/', drf_views.obtain_auth_token)
+    #path('api-token-auth/', drf_views.obtain_auth_token),
+
+    
+
 ]
+
+
+
+
+
+
+
+#path('jet/', include('jet.urls', 'jet')),
